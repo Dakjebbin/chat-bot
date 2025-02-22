@@ -100,3 +100,8 @@ width: 77%;
   display: flex;
   flex-direction: column-reverse;
 }
+
+.r-msg{
+  flex-direction: row-reverse;
+  justify-content: start;
+}
