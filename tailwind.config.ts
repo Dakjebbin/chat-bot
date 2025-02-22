@@ -12,6 +12,12 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+     backgroundImage: {
+      'hero-pattern': "url('/chat-background.png')",
+      },
+      fontFamily: {
+        outfit: "var(--font-outfit)",
+      }
     },
   },
   plugins: [],
