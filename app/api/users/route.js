@@ -3,18 +3,24 @@
 //     return new Response('Hello, Next.js server is running!');
 // }
 
+import connectDB from "../../lib/db";
 import User from "../../models/user.model";
 import bcrypt from "bcryptjs"
 
-export const POST = async (req,res) => {
+export const POST = async (request) => {
+
  try {
-  const {username, email, password} = req.body;
+  await connectDB()
+  const {username, email, password} = await request.json();
 
   if (!username || !email || !password) {
-    res.status(400).json({
+   return new Response(
+    JSON.stringify({
       success: false,
-      message: 'Missing required fields'
-    })
+      message: 'Please provide all required fields'
+    }), 
+    {status: 400}
+   )
   }
 
   // Add your database logic here to save user to the database
@@ -22,10 +28,13 @@ export const POST = async (req,res) => {
   const userExists = await User.findOne({email}).exec()
 
   if (userExists) {
-    res.status(400).json({
-      success: false,
-      message: 'User already exists'
-    })
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: 'User already Exists'
+      }), 
+      {status: 400}
+     )
   }
 
   const salt = await bcrypt.genSalt(12)
@@ -34,22 +43,28 @@ export const POST = async (req,res) => {
   const newUser = new User({
     username,
     email,
-    password: hashedPassword
+    password:hashedPassword
   })
 
   await newUser.save()
-  
-  res.status(200).json({
-    success: true,
-    message: "User registered successfully",
-    newUser
-})
+
+  return new Response(
+    JSON.stringify({
+      success: true,
+      message: 'User registered successfully',
+      newUser
+    }), 
+    {status: 200}
+   )
 
  } catch (error) {
-      res.status(500).json({
-        success:false,
-        message: "internal Server error: " + error.message
-      })
+  return new Response(
+    JSON.stringify({
+      success: false,
+      message: "Internal Server Error: " + error.message,
+    }),
+    { status: 500 }
+  )
  }
   
 }
