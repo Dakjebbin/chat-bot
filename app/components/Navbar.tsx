@@ -2,6 +2,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import axios from "axios"
+import toast, { Toaster } from 'react-hot-toast';
 
 const Navbar = () => {
   const [menu, setMenu] = useState("SignUp");
@@ -24,13 +25,13 @@ const Navbar = () => {
         })
 
         console.log(response);
-        if (response.data.status === 200) {
-            alert("User registered successfully!");
+        if (response.status === 200) {
+           toast.success("user registered successfully")
         setUsername("");
         setEmail("");
-        setPassword("");
+       setMenu('Login')
         } else {
-            alert("Failed to register user.");
+            toast.error("Failed to register user.");
         }
         
     } catch (error) {
@@ -88,7 +89,7 @@ const Navbar = () => {
                   className="w-[100%] shadow-md shadow-[#575656]  outline-none rounded-xl ,mb-2 mt-5 px-3 py-2"
                   required
                   name=""
-                  id=""
+                  id="email"
                   placeholder="Enter your Email"
                 />
               )}
@@ -100,7 +101,7 @@ const Navbar = () => {
                 className="w-[100%] shadow-md shadow-[#575656]  outline-none rounded-xl mb-6 mt-5 px-3 py-2"
                 required
                 name=""
-                id=""
+                id="name"
                 placeholder="Enter your Username"
               />
 
@@ -110,12 +111,12 @@ const Navbar = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-[100%] outline-none shadow-md shadow-[#575656] rounded-xl mb-6 px-3 py-2"
                 name=""
-                id=""
+                id="password"
                 required
                 placeholder="Enter your password"
               />
               <span className="flex mb-5">
-                <input required type="checkbox" name="" id="" />
+                <input required type="checkbox" name="" id="checkbox" />
                 <p className="text-sm text-[#5e5d5d] font-medium ml-3">
                   Agree to the terms of use & Privacy Policy.
                 </p>
@@ -180,6 +181,8 @@ const Navbar = () => {
           />
         </div>
       </div>
+      
+      <Toaster />
     </div>
   );
 };
