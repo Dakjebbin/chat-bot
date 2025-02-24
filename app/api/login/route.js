@@ -3,6 +3,7 @@ import User from "../../models/user.model";
 import {NextResponse} from 'next/server'
 import jwt from 'jsonwebtoken'
 import bcrypt from "bcryptjs";
+import { cookies } from 'next/headers';
 
 export const POST = async (request) => {
 
@@ -45,21 +46,23 @@ export const POST = async (request) => {
     const refreshToken = jwt.sign(
         {code: user._id},
         process.env.JWT_SECRET,
-        {expiresIn: '1d'}
+        {expiresIn: '3d'}
 )
 
-        res.cookie("accessToken", accessToken, {
+            const cookiesStore = await cookies()
+
+       cookiesStore.set("accessToken", accessToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
-            maxAge:  10 * 3600 * 1000
+            maxAge:  3600
         })
 
-        res.cookie("refreshToken", refreshToken, {
+      cookiesStore.set("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
-            maxAge: 1* 24 * 3600 * 1000
+            maxAge: 3 * 24 * 3600,
         })
 
         return NextResponse.json({
@@ -73,6 +76,4 @@ export const POST = async (request) => {
             message: "Internal Server Error: " + error.message
         }, { status: 500 });
     }
-   
-    
 }

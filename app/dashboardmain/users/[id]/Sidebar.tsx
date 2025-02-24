@@ -10,7 +10,7 @@ const Sidebar = ({ navbar }: HeaderProps) => {
     
     
   return (
-    <div className='bg-transparent flex fixed'>
+    <div className='bg-transparent flex fixed z-50'>
         {/* desktop view */}
    <div className='bg-[#1f2937] desktop border-t border-t-[#4b5563] h-screen'>
 

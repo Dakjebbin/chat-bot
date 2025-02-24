@@ -4,8 +4,6 @@ import React from 'react'
 const Chatmessages = () => {
   return (
     <div className='bg-slate-200 h-[90vh]'>
-
-
     <div className='p-4 sm:ml-64 chat-msg '>
         <div className='flex items-end justify-end gap-1 p-[0px_15px]'>
             <p className="text-white bg-[#1f2937] p-2 max-w-[300px] text-[13px] font-[300]
@@ -38,7 +36,7 @@ const Chatmessages = () => {
     </div>
 
 
-    <div className='flex items-center gap-3 p-[10px_15px] bg-white absolute bottom-0 left-0 md:left-[230px] right-0'>
+    <div className='flex items-center gap-3 p-[10px_15px] bg-white absolute bottom-0 left-0 md:left-[245px] right-0'>
         <input className='flex-1 border-none outline-none' type="text" placeholder='Send a message' />
         <input type="file" id="image" accept='image/png, image/jpeg' hidden />
         <label className='flex' htmlFor="image">

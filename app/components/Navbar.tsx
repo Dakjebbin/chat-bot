@@ -17,34 +17,51 @@ const Navbar = () => {
     e.preventDefault();
 
     try {
-     
+     if (menu === "SignUp") {
         const response = await axios.post(`${baseUrl}/api/users`,{
             username,
             email,
             password
         })
 
-        console.log(response);
         if (response.status === 200) {
            toast.success("user registered successfully")
         setUsername("");
         setEmail("");
+        setPassword("");
        setMenu('Login')
         } else {
             toast.error("Failed to register user.");
         }
-        
+      } else {
+
+        const response = await axios.post(`${baseUrl}/api/login`,{
+            username,
+            password
+        })
+
+        if (response.status === 200) {
+          toast.success("User logged in successfully");
+          setUsername('')
+          setPassword('')
+          window.location.assign('/dashboardmain')
+        } else {
+          toast.error("Invalid credentials.");
+        }
+      }
     } catch (error) {
         if (error instanceof axios.AxiosError) {
             console.log(error?.response?.data);
           }
           if (error === 404 || error) {
             const errorMessage = error;
-            console.log(errorMessage);
+            console.error(errorMessage);
           }    
     } 
     
   };
+
+  
 
   return (
     <div className="lg:h-screen h-auto bg-cover flex justify-center items-center bg-hero-pattern">
