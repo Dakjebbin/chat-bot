@@ -1,24 +1,29 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios"
 import toast, { Toaster } from 'react-hot-toast';
+import { io } from "socket.io-client";
 
 const Navbar = () => {
   const [menu, setMenu] = useState("SignUp");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
- 
- 
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL 
+  const [loading, setLoading] = useState(false);
+
+
+  // const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const baseUrl = "http://localhost:3212"
+axios.defaults.withCredentials = true;
+
 
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-
+    setLoading(true)
     try {
      if (menu === "SignUp") {
-        const response = await axios.post(`${baseUrl}/api/users`,{
+        const response = await axios.post(`${baseUrl}/auth/register`,{
             username,
             email,
             password
@@ -35,7 +40,7 @@ const Navbar = () => {
         }
       } else {
 
-        const response = await axios.post(`${baseUrl}/api/login`,{
+        const response = await axios.post(`${baseUrl}/auth/login`,{
             username,
             password
         })
@@ -50,18 +55,28 @@ const Navbar = () => {
         }
       }
     } catch (error) {
-        if (error instanceof axios.AxiosError) {
-            console.log(error?.response?.data);
+         if (error instanceof axios.AxiosError) {
+        if (error?.response) {
+          if (error.response.status === 400) {
+            toast.error(error?.response?.data?.message);
           }
-          if (error === 404 || error) {
-            const errorMessage = error;
-            console.error(errorMessage);
-          }    
-    } 
-    
+        } 
+        }
+
+    } finally{
+      setLoading(false);
+    }
+
   };
 
-  
+  useEffect(() => {
+const socket = io("http://localhost:3212")
+socket.on("connect", () => {
+  console.log("connected to backend");
+});
+  },[])
+
+
 
   return (
     <div className="lg:h-screen h-auto bg-cover flex justify-center items-center bg-hero-pattern">
@@ -139,12 +154,12 @@ const Navbar = () => {
                 </p>
               </span>
               {menu === "Login" ? (
-                <button type="submit" className="bg-[#077eff] text-white w-full rounded-xl py-2 font-semibold">
-                  Login
+                <button type="submit" disabled={loading} className="bg-[#077eff] text-white w-full rounded-xl py-2 font-semibold">
+                  {loading ? "Loading..." : "Login"}                  
                 </button>
               ) : (
-                <button type="submit" className="bg-[#077eff] text-white w-full rounded-xl py-2 font-semibold">
-                  Create Account
+                <button type="submit" disabled={loading}  className="bg-[#077eff] text-white w-full rounded-xl py-2 font-semibold">
+                  {loading ? "Loading..." : "Create Account"} 
                 </button>
               )}
             </form>
@@ -198,7 +213,7 @@ const Navbar = () => {
           />
         </div>
       </div>
-      
+
       <Toaster />
     </div>
   );

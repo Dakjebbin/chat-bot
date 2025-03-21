@@ -3,19 +3,65 @@
 import Image from 'next/image'
 import Link from 'next/link';
 import React, { useState } from 'react'
+import { useAuthContext } from '../context/authContext';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 
 type HeaderProps = {
   handle: () => void;
 }
+
+type userDataType = {
+  username: string,
+  email: string,
+}
+
+// interface AuthContextType {
+//   userData: userDataType | null;
+// }
+
 const Header = ({ handle }: HeaderProps) => {
   
   const [isHovered, setIsHovered] = useState(false);
- 
+  // const AuthContext = useAuthContext()
+  // const userData = AuthContext?.userData
+
+  const authContext = useAuthContext();
+  const userData = authContext ? authContext.userData : null;
+  const user = userData as userDataType | null
+  const baseUrl = 'http://localhost:3212';
 
   const handleToggle = () => {
     setIsHovered(!isHovered)
   }
+
+  axios.defaults.withCredentials = true
+
+const handleLogout = async () => {
+  try {
+   const response = await axios.post(`${baseUrl}/auth/logout`,{
+    withCredentials:true
+   }) 
+
+   if (response.status === 200) {
+    toast.success("Logged out successfully")
+    window.location.assign("/")
+  
+   }
+
+   console.log(response);
+   
+  } catch (error) {
+    if (error instanceof axios.AxiosError) {
+      console.log  (
+           error?.response?.data
+         );
+       } else {
+       console.log("reg error => ", error);
+       }
+  }
+}
 
   return (
     <div className='bg-[#1f2937] sticky top-0 p-3 flex justify-between items-center pr-10'>
@@ -38,18 +84,18 @@ const Header = ({ handle }: HeaderProps) => {
      {isHovered ? <div className={'absolute -translate-x-28 w-44  rounded-md  translate-y-7 bg-[#374151]'}>
         <div className='p-3'>
         <p className="text-sm truncate text-white" role="none">
-                  Neil Sims
+        {user?.username}
                 </p>
-        <p className="text-sm font-medium  text-gray-900 truncate dark:text-gray-300" role="none">
-                  neil.sims@flowbite.commsrsktoihortgijo
+        <p className="text-sm font-medium  text-white truncate dark:text-gray-300" role="none">
+                  {user?.email}
                 </p>
                 </div>
         <hr className='border-[#4b5563]'/>
         <ul className='p-3'>
-          <li className='px-4 py-2 text-sm hover:rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white'>Dashboard</li>
-          <li className=' px-4 py-2 text-sm text-gray-700 hover:rounded-md hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white'>Settings</li>
-          <li className=' px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white'>Billing</li>
-          <li className=' px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white'>LogOut</li>
+          <li className='px-4 py-2 text-sm hover:rounded-md text-white hover:bg-gray-100 hover:text-black '>Dashboard</li>
+          <li className=' px-4 py-2 text-sm text-white hover:rounded-md hover:bg-gray-100 hover:text-black'>Settings</li>
+          <li className=' px-4 py-2 text-sm hover:rounded-md text-white hover:bg-gray-100 hover:text-black '>Billing</li>
+          <li onClick={handleLogout} className=' px-4 py-2 text-sm hover:rounded-md text-white hover:bg-gray-100 hover:text-black '>LogOut</li>
         </ul>
       </div> : null}
       

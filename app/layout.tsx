@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
+import { AuthContextProvider } from "./context/authContext";
 
 
 const outfit = Outfit({
@@ -24,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-
+<AuthContextProvider>
     <html lang="en">
       <body
         className={`${outfit.variable} antialiased`}
@@ -32,6 +33,7 @@ export default function RootLayout({
         {children}
       </body>
     </html>
+    </AuthContextProvider>
     
   );
 }

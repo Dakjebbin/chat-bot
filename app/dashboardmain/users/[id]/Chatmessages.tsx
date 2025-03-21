@@ -24,8 +24,8 @@ const Chatmessages = () => {
 
 
         <div className='flex items-end justify-end gap-1 p-[0px_15px] r-msg'>
-            <p className='text-white bg-[#1f2937] p-2 max-w-[300px] text-[13px] font-[300]
-             rounded-[8px_8px_8px_0px] mb-6'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio cumque quasi illo impedit .</p>
+            <p className='text-black bg-[#cfcfcf] p-2 max-w-[300px] text-[13px] font-[300]
+             rounded-[8px_8px_8px_0px] mb-6'>Lorem  ipsum dolor sit amet, consectetur adipisicing elit. Distinctio cumque quasi illo impedit.</p>
             <div className='text-center text-[11px]'>
             <Image className="w-8 aspect-square rounded-full" width={1000} height={1000} src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo"/>
             <p>2:30pm</p>
